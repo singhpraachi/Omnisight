@@ -3,7 +3,7 @@ Multimodal UI Self-Healing and RPA Agent
 
 ## Project Overview
 
-OmniSight is a multimodal UI self-healing and RPA agent designed
+OmniSight is a multimodal UI self-healing and RPA agent designed<br>
 to detect visual UI issues, analyze screenshots and DOM information,
 and assist in generating UI fixes.
 
