@@ -14,3 +14,11 @@ def health_check():
         "status": "healthy",
         "service": "OmniSight API",
     }
+
+
+@app.post("/webhook")
+def receive_webhook(payload: dict):
+    return {
+        "status": "received",
+        "message": "Webhook received successfully",
+    }
