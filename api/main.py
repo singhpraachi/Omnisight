@@ -1,3 +1,12 @@
+from fastapi import FastAPI
+from pydantic import BaseModel, HttpUrl
+
+
+class WebhookPayload(BaseModel):
+    event: str
+    repository: str
+    build_id: str
+    url: HttpUrl
 
 from fastapi import FastAPI
 
@@ -17,7 +26,7 @@ def health_check():
 
 
 @app.post("/webhook")
-def receive_webhook(payload: dict):
+def receive_webhook(payload: WebhookPayload):
     return {
         "status": "received",
         "message": "Webhook received successfully",
