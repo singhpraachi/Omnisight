@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI QA Demo Shop</title>
+</head>
+
+<body>
+
+    <h1>AI QA Demo Shop</h1>
+
+    <h2>AI Automation Laptop</h2>
+
+    <p>Price: ₹75,000</p>
+
+    <button id="add-to-cart">
+        Add to Cart
+    </button>
+
+
+    <div id="cart" style="display: none;">
+
+        <h2>Shopping Cart</h2>
+
+        <p>AI Automation Laptop - ₹75,000</p>
+
+        <button id="checkout">
+            Checkout
+        </button>
+
+    </div>
+
+
+    <div id="checkout-page" style="display: none;">
+
+        <h2>Checkout</h2>
+
+        <label>Name:</label>
+
+        <input id="name" type="text">
+
+        <br><br>
+
+        <label>Email:</label>
+
+        <input id="email" type="email">
+
+        <br><br>
+
+        <button id="place-order">
+            Place Order
+        </button>
+
+    </div>
+
+
+    <div id="success" style="display: none;">
+
+        <h2>Order Successful!</h2>
+
+        <p id="confirmation"></p>
+
+    </div>
+
+
+    <script>
+
+        document.getElementById("add-to-cart").onclick = function () {
+
+            document.getElementById("cart").style.display = "block";
+
+        };
+
+
+        document.getElementById("checkout").onclick = function () {
+
+            document.getElementById("checkout-page").style.display = "block";
+
+        };
+
+
+        document.getElementById("place-order").onclick = function () {
+
+            const name = document.getElementById("name").value;
+
+            const email = document.getElementById("email").value;
+
+            document.getElementById("success").style.display = "block";
+
+            document.getElementById("confirmation").innerText =
+                "Thank you " + name + "! Confirmation sent to " + email;
+
+        };
+
+    </script>
+
+</body>
+</html>
