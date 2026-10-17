@@ -1,148 +1,76 @@
-\# OmniSight Action Engine
+# Action Engine
 
+## Overview
 
+The Action Engine parses UI audit reports, validates suggested fixes, and prepares proposals for review before integration with OmniSight.
 
-\## Overview
+It accepts structured audit reports and produces validated fix proposals without executing or automatically applying suggested code.
 
+## Features
 
+- Parse reports supplied as JSON strings, dictionaries, or validated report models.
+- Validate report fields and suggested-fix types using Pydantic models.
+- Extract individual fix proposals from an audit report.
+- Perform basic safety checks on CSS and React fix code.
+- Prepare a review package with proposal validation results and summary counts.
+- Support human review before fixes are applied.
 
-The Action Engine processes UI audit reports from a Vision-Language Model (VLM) and prepares suggested fixes for human review.
-
-
-
-It supports CSS and React fix proposals. It validates report structure, extracts proposed fixes, performs basic code checks, and creates a review package.
-
-
-
-The Action Engine does not execute proposed code or automatically modify the application.
-
-
-
-\## Features
-
-
-
-\- Parse audit reports from JSON strings, dictionaries, or validated report objects.
-
-\- Validate reports using Pydantic models.
-
-\- Extract proposed fixes with element, issue, severity, evidence, confidence, code, and rationale.
-
-\- Perform basic pattern checks on CSS and React proposals.
-
-\- Prepare review packages with validation results and pending-review statuses.
-
-\- Reject reports containing more than 100 issues.
-
-
-
-\## Expected report structure
-
-
-
-Each issue contains:
-
-
-
-\- `element`: affected UI element.
-
-\- `issue`: description of the visual problem.
-
-\- `severity`: `low`, `medium`, `high`, or `critical`.
-
-\- `evidence`: evidence supporting the finding.
-
-\- `suggested\_fix`: fix type, code, and rationale.
-
-\- `confidence`: value between 0 and 1.
-
-
-
-\## Usage
-
-
+## Usage
 
 ```python
-
-from action\_engine import prepare\_review\_package
-
-
+from action_engine import (
+    parse_audit_report,
+    extract_fix_proposals,
+    prepare_review_package,
+)
 
 report = {
-
-&#x20;   "summary": "The login button has poor contrast.",
-
-&#x20;   "issues": \[
-
-&#x20;       {
-
-&#x20;           "element": ".login-button",
-
-&#x20;           "issue": "Insufficient text contrast.",
-
-&#x20;           "severity": "medium",
-
-&#x20;           "evidence": "The button text is difficult to distinguish.",
-
-&#x20;           "suggested\_fix": {
-
-&#x20;               "type": "css",
-
-&#x20;               "code": ".login-button { color: white; background: #222; }",
-
-&#x20;               "rationale": "Improve text contrast."
-
-&#x20;           },
-
-&#x20;           "confidence": 0.95
-
-&#x20;       }
-
-&#x20;   ]
-
+    "summary": "One UI issue detected",
+    "issues": [
+        {
+            "element": "Submit button",
+            "issue": "Insufficient color contrast",
+            "severity": "medium",
+            "evidence": "The button text is difficult to read.",
+            "suggested_fix": {
+                "type": "css",
+                "code": "color: #222; background-color: #fff;",
+                "rationale": "Improve text readability.",
+            },
+            "confidence": 0.95,
+        }
+    ],
 }
 
+validated_report = parse_audit_report(report)
+proposals = extract_fix_proposals(validated_report)
+review_package = prepare_review_package(validated_report)
 
-
-review\_package = prepare\_review\_package(report)
-
-print(review\_package)
-
+print(proposals)
+print(review_package)
 ```
 
+## Run tests
 
-
-\## Run tests
-
-
-
-From the repository root, with the project virtual environment activated:
-
-
+From the repository root:
 
 ```powershell
-
-python -m pytest tests\\test\_action\_engine.py -v
-
+python -m pytest tests\test_action_engine.py -v
 ```
 
+## Integration workflow
 
+1. Receive a UI audit report from the VLM analyzer.
+2. Parse and validate the report.
+3. Extract suggested fix proposals.
+4. Run basic safety checks.
+5. Present the proposals and validation results for human review.
+6. Leave applying fixes and creating pull requests to a separate, approved integration workflow.
 
-\## Safety limitations
+## Safety and scope
 
+The Action Engine does not execute proposed code or automatically modify application files. Its checks are basic pattern-based safeguards and are not a complete security analysis. Proposals must be reviewed before application.
 
+## Current scope
 
-Code checks use a limited set of pattern-based rules. They are not a complete security analysis and may miss unsafe code or reject legitimate code.
-
-
-
-A proposal marked as accepted is only accepted for review. It is not guaranteed to be safe. Human review is required before any proposed change is applied.
-
-
-
-\## Current scope
-
-
-
-The Action Engine parses reports and prepares fix proposals. It does not yet apply fixes, edit source files, create Git commits, or open pull requests automatically.
-
+This component provides report parsing, proposal extraction, basic validation, and review-package preparation. Full browser integration, automatic fix application, and pull-request creation are outside its current scope.
